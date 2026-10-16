@@ -234,6 +234,7 @@ def build_home():
     {cta_buttons(r)}
     <ul class="facts">
       <li><strong>{SITE['review_count']}</strong> reviews on Google</li>
+      <li><strong>{SITE['tiktok_followers']}</strong> followers on TikTok</li>
       <li><strong>BP Medical Aid</strong> Dental Network</li>
       <li><strong>BChD</strong>, University of the Western Cape</li>
     </ul>
@@ -251,19 +252,19 @@ def build_home():
     <li><b>Explained first</b><p>Before anything happens, you’ll know what Dr Grace is doing and why.</p></li>
     <li><b>Your pace</b><p>Need a break? Raise your hand and we stop. There’s no rush in this chair.</p></li>
     <li><b>Costs upfront</b><p>You get your options and what they cost before treatment, with help checking your medical aid.</p></li>
-    <li><b>Modern tools</b><p>Including the cordless FKG Rooter for smoother, more precise root canal care.</p></li>
+    <li><b>Never rushed</b><p>Bonding is sculpted by hand, tooth by tooth, and root canals use the cordless FKG Rooter for smoother, precise care.</p></li>
   </ul>
 </div></section>
 
 <section class="section"><div class="wrap">
   <div class="section-head"><h2>Treatments</h2><a class="btn btn-ghost" href="treatments.html">All treatments</a></div>
-  {t_index(["check-ups-and-cleaning","fillings","root-canal-treatment","teeth-whitening","smile-makeovers","emergency-dentist"], r)}
+  {t_index(["composite-bonding","root-canal-treatment","bridges","check-ups-and-cleaning","teeth-whitening","emergency-dentist"], r)}
 </div></section>
 
 <section class="section panel"><div class="wrap split even" style="align-items:center">
   <div>
     <h2>Meet Dr Grace</h2>
-    <p class="lede" style="margin-top:18px">Dr Grace Mwizerwa trained at the University of the Western Cape and runs Grace Dental Suite in Parow. Her patients know her for one thing above all: she explains every step, so treatment never feels like a mystery.</p>
+    <p class="lede" style="margin-top:18px">Dr Grace Mwizerwa trained at the University of the Western Cape and runs Grace Dental Suite in Parow, a proudly Black woman-owned practice. Her patients know her for one thing above all: she explains every step, so treatment never feels like a mystery.</p>
     <div class="btn-row" style="margin-top:28px"><a class="btn btn-primary" href="about.html">About Dr Grace</a></div>
   </div>
   <ol class="steps" aria-label="Your first visit">
@@ -339,11 +340,17 @@ def build_about():
 <section class="section"><div class="wrap split">
   <div><h2>How Dr Grace works</h2></div>
   <div class="prose">
-    <p>Dr Grace trained at the University of the Western Cape and now runs Grace Dental Suite, a calm practice in Fairfield Estate, Parow, built around one idea: going to the dentist shouldn’t be something you dread.</p>
+    <p>Dr Grace trained at the University of the Western Cape and opened Grace Dental Suite in Fairfield Estate, Parow, in 2023. It’s proudly a Black woman-owned practice, built with passion, faith, hard work and the trust of every patient who walks through the door, around one idea: going to the dentist shouldn’t be something you dread.</p>
     <p>Before any treatment, she talks you through what will happen, what you’ll feel and what it will cost. Nothing starts until you’re comfortable, and you can ask to pause at any time.</p>
     <p>Her patients often say it’s the first time a dental visit felt smooth and painless. That comes from careful technique, modern equipment and simply taking the time to listen.</p>
+    <p>She is best known for composite bonding: rebuilding chipped, worn, gapped or gold-restored teeth by hand in tooth-coloured resin. She takes her time, typically 2 to 3 hours per tooth, and always aims to save natural teeth wherever possible.</p>
     <p>Away from the chair, you’ll find Dr Grace sharing honest, everyday dental advice on <a href="{SITE['tiktok']}" target="_blank" rel="noopener">TikTok</a> and <a href="{SITE['instagram']}" target="_blank" rel="noopener">Instagram</a>.</p>
   </div>
+</div></section>
+
+<section class="section tint"><div class="wrap embed-grid" style="align-items:center">
+  <div><h2>In her own words</h2><p class="lede" style="margin-top:18px">What started as a dream continues to grow through faith, hard work and the trust of our patients. Watch Dr Grace’s story on TikTok.</p></div>
+  <div>{tt_block(next(v for v in TIKTOK_VIDEOS if "woman-owned" in v["title"]))}</div>
 </div></section>
 
 <section class="section panel"><div class="wrap split even" style="align-items:center">
@@ -527,7 +534,7 @@ def build_contact():
 </div></section>
 <section class="section tint"><div class="wrap"><div class="map" data-map="{e(SITE['maps_query'])}" style="margin-top:0;aspect-ratio:21/9"><a class="btn btn-ghost" href="{SITE['maps_link']}" target="_blank" rel="noopener">Open in Google Maps</a></div></div></section>
 '''
-    page("contact.html", "Book an Appointment | Grace Dental Suite, Parow, Cape Town", "Book at Grace Dental Suite, 11 Kitchener Street, Fairfield Estate, Parow. WhatsApp or call 061 325 0776. Hours, directions and map.", body, current="contact.html", crumbs=[("Home","index.html"),("Contact","contact.html")], priority="0.9")
+    page("contact.html", "Book an Appointment | Grace Dental Suite, Parow, Cape Town", "Book at Grace Dental Suite, 11 Kitchener Street, Fairfield Estate, Parow. WhatsApp or call " + SITE["phone"] + ". Hours, directions and map.", body, current="contact.html", crumbs=[("Home","index.html"),("Contact","contact.html")], priority="0.9")
 
 
 # ------------------------------------------------------------------ GALLERY

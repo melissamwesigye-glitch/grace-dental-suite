@@ -34,5 +34,5 @@ python3 tools/shoot.py index.html,gallery.html mobile          # screenshots (ne
 
 ## Before launch (open items)
 
-Domain, opening hours, WhatsApp number, practice email, treatment list, medical aids accepted,
+Domain, opening hours, WhatsApp number (073 366 1421 per her socials; BP list shows 061 325 0776), braces offered?, treatment list, medical aids accepted,
 approval of the three blog articles, real review quotes, real practice photos.

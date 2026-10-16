@@ -20,7 +20,7 @@ BEFORE GOING LIVE, CHECK
    If the domain is different, it must be updated in every page,
    sitemap.xml and robots.txt (ask whoever built the site to regenerate them).
 2. Opening hours (footer, contact page, Google data).
-3. That 061 325 0776 is the practice WhatsApp number.
+3. That 073 366 1421 is the practice WhatsApp number.
 4. The treatment list and medical aids accepted.
 5. The three blog articles: read and approve them.
 

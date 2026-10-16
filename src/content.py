@@ -5,10 +5,12 @@ SITE = {
     "name": "Grace Dental Suite",
     # CONFIRM: the domain she buys. Used for canonical links, sitemap and Google.
     "domain": "https://www.gracedentalsuite.co.za",
-    "phone": "061 325 0776", "phone_tel": "+27613250776",
+    # From her Instagram and TikTok bios (Oct 2026). The BP network list still shows 061 325 0776.
+    "phone": "073 366 1421", "phone_tel": "+27733661421",
     "phone2": "021 023 3250", "phone2_tel": "+27210233250",
-    "whatsapp": "27613250776",  # CONFIRM this number is on WhatsApp
-    "email": "",  # CONFIRM: practice email (hidden while empty)
+    "whatsapp": "27733661421",  # CONFIRM this number is on WhatsApp
+    "email": "drgracemwizerwa@gmail.com",  # as published on her Instagram bio
+    "tiktok_followers": "13K+", "instagram_followers": "8,900+",
     "street": "11 Kitchener Street", "area": "Fairfield Estate", "city": "Parow, Cape Town",
     "postcode": "7500", "region": "Western Cape", "country": "ZA",
     "maps_query": "11 Kitchener Street, Fairfield Estate, Parow, 7500",
@@ -36,8 +38,8 @@ REVIEWS = [
 
 TREATMENT_GROUPS = [
     ("Everyday care", ["check-ups-and-cleaning", "fillings", "childrens-dentistry"]),
-    ("Saving and replacing teeth", ["root-canal-treatment", "extractions", "dentures"]),
-    ("Cosmetic", ["teeth-whitening", "smile-makeovers"]),
+    ("Saving and replacing teeth", ["root-canal-treatment", "bridges", "extractions", "dentures"]),
+    ("Cosmetic", ["composite-bonding", "teeth-whitening"]),
     ("Urgent care", ["emergency-dentist"]),
 ]
 
@@ -89,7 +91,7 @@ TREATMENTS = {
     faqs=[("Can I eat straight after a white filling?", "Yes. Composite sets hard straight away, but wait until the numbness wears off."),
           ("How long does a filling last?", "With good care many fillings last for years. Grinding, new decay around the edges and very large fillings shorten their life, which is why regular check-ups matter."),
           ("Can you replace my old silver fillings?", "If an amalgam filling is cracked, leaking or has decay under it, it can be replaced with a tooth-coloured one. If it’s sound, Dr Grace will talk you through the pros and cons before you decide.")],
-    related=["check-ups-and-cleaning", "root-canal-treatment", "smile-makeovers"],
+    related=["check-ups-and-cleaning", "root-canal-treatment", "composite-bonding"],
 ),
 "root-canal-treatment": dict(
     name="Root canal treatment",
@@ -171,28 +173,61 @@ TREATMENTS = {
           ("Why not use shop kits or charcoal?", "Shop kits are weaker, and one-size trays can let gel irritate your gums. Charcoal is abrasive and can wear enamel, which can make teeth look more yellow over time."),
           ("Will my fillings or crowns whiten too?", "No. Whitening only works on natural enamel, so fillings or crowns on front teeth may need replacing afterwards to match."),
           ("How long do results last?", "Usually from several months to a couple of years. Coffee, tea, red wine and smoking bring stains back faster.")],
-    related=["smile-makeovers", "check-ups-and-cleaning", "fillings"],
+    related=["composite-bonding", "check-ups-and-cleaning", "fillings"],
 ),
-"smile-makeovers": dict(
-    name="Smile makeovers and bonding",
-    short="Close gaps, fix chips and reshape edges, usually in one visit.",
-    title="Smile Makeovers and Composite Bonding in Parow | Grace Dental Suite",
-    desc="Composite bonding and smile makeovers in Parow, Cape Town. Repair chips, close small gaps and reshape teeth with little or no drilling.",
-    h1="Smile makeovers and bonding",
-    intro=["Small changes can make a big difference to how you feel about your smile. Composite bonding uses tooth-coloured material to repair chips, close small gaps and even out uneven edges, usually with little or no drilling.",
-           "A smile makeover can combine treatments, such as whitening first and then bonding, planned around what you’d like to change."],
+"composite-bonding": dict(
+    name="Composite bonding",
+    short="Hand-sculpted, tooth-coloured bonding to fix chips, gaps and old gold.",
+    title="Composite Bonding in Parow, Cape Town | Grace Dental Suite",
+    desc="Composite bonding in Parow, Cape Town: chips, gaps, worn teeth and old gold restorations rebuilt by hand in tooth-coloured resin, often in one visit.",
+    h1="Composite bonding, sculpted by hand",
+    intro=["Composite bonding is the treatment Grace Dental Suite is best known for. A tooth-coloured resin is layered, sculpted and polished directly onto your natural teeth to repair chips, close gaps, rebuild worn or decayed edges, cover stains and even out uneven shapes.",
+           "Because the resin is added to your tooth, very little or none of your natural tooth usually needs to be removed. Many smiles are finished in a single visit, with no lab and no waiting."],
+    callout="We don’t rush bonding. Each tooth is shade-matched and shaped by hand, and we typically spend 2 to 3 hours on each tooth, paying attention to shape, colour, function and how it suits your face and bite. More complex cases may need two appointments.",
     signs_title="Bonding can help with",
-    signs=["Chipped or worn edges", "Small gaps between front teeth", "Teeth of uneven length or shape", "Stained old fillings on front teeth"],
-    steps=[("Consultation", "Tell us what you’d like to change. We take photos and talk through options and costs."),
-           ("Whitening first (optional)", "Bonding is matched to your shade and won’t whiten later, so any whitening is done first."),
-           ("Bonding", "Composite is layered, shaped and polished by hand, often in a single visit."),
-           ("Review", "We check your bite and the look together and make small refinements.")],
-    aftercare=["Avoid biting hard objects such as nails, pens and bottle tops.",
-               "Coloured drinks can stain composite over time, and a polish at your check-ups keeps it looking fresh."],
-    faqs=[("Does bonding damage my teeth?", "Bonding usually needs little or no removal of natural tooth, which is one of its biggest advantages."),
-          ("How long does bonding last?", "Typically several years before it needs polishing, repairing or replacing, depending on your habits and bite."),
-          ("Bonding or veneers?", "Bonding is quicker, more affordable and easier to repair. If porcelain veneers would suit your goals better, Dr Grace will explain why and what’s involved.")],
-    related=["teeth-whitening", "fillings", "check-ups-and-cleaning"],
+    signs=["Chipped, cracked or worn front teeth",
+           "Gaps between teeth, including a natural gap you’d like closed",
+           "Teeth of uneven length or shape",
+           "Stains or discolouration that cleaning won’t lift",
+           "Old gold or silver restorations you’d like replaced with a natural look",
+           "Adult teeth with enamel defects left by decayed baby teeth"],
+    steps=[("Consultation", "Tell us what you’d like to change. Dr Grace checks your bite and gum health and explains options and costs."),
+           ("Shade matching", "The resin colour is matched to your natural teeth. Any whitening is done first, because bonding won’t whiten later."),
+           ("Sculpting", "Decay or old restorations are removed where needed, then the resin is layered and shaped tooth by tooth."),
+           ("Polish and check", "Each tooth is polished to a natural shine and your bite is checked and refined.")],
+    aftercare=["Results are immediate. Avoid biting hard objects such as ice, nails, pens and bottle tops, and don’t use your teeth as tools.",
+               "Composite is softer than porcelain, so over time it can stain or chip. Regular check-ups and a professional polish keep it looking its best, and small repairs are simple."],
+    faqs=[("Does bonding damage my teeth?", "In suitable cases very little or no natural tooth needs to be removed, which is one of the biggest advantages of bonding over veneers and crowns."),
+          ("How long does bonding last?", "With good care, bonding lasts for years. How long depends on your bite, habits such as grinding, and keeping up with check-ups."),
+          ("Can you remove the gold on my front teeth?", "In many cases, yes. Old gold or silver restorations can be removed and replaced with tooth-coloured bonding. A consultation shows what’s possible for your teeth."),
+          ("Bonding, composite veneers or porcelain veneers?", "Composite is quicker, more conservative and easier to repair, but it isn’t permanent and can stain or chip over time. Dr Grace will be honest about which option suits your goals.")],
+    related=["bridges", "teeth-whitening", "fillings"],
+),
+"bridges": dict(
+    name="Fibre and traditional bridges",
+    short="Replace a missing tooth, often in one visit with a fibre bridge.",
+    title="Fibre Bridges and Dental Bridges in Parow | Grace Dental Suite",
+    desc="Replace a missing tooth in Parow, Cape Town. Fibre bridges are usually done in one visit without surgery; traditional bridges are made in a lab for strength.",
+    h1="Fibre and traditional bridges",
+    intro=["A bridge replaces a missing tooth by attaching a new tooth to the teeth on either side of the gap. Grace Dental Suite offers two kinds.",
+           "A fibre bridge uses a strong fibre framework and tooth-coloured composite bonded to the neighbouring teeth. It’s conservative, needs no surgery, and is usually completed in one visit. A traditional bridge is made in a dental laboratory and cemented over prepared teeth for long-term strength."],
+    signs_title="A bridge may suit you if",
+    signs=["You have one missing tooth and healthy teeth on either side",
+           "You’d like to avoid implant surgery",
+           "You want a natural-looking result quickly",
+           "An old bridge feels uncomfortable or looks unnatural and needs redoing"],
+    callout="Sometimes the right space has to be created first. If neighbouring teeth have drifted into a gap over the years, a short course of braces can move them back before the missing tooth is replaced.",
+    steps=[("Assessment", "Dr Grace checks the gap, the neighbouring teeth and your bite, and explains which bridge suits you and what it costs."),
+           ("Preparation", "For a fibre bridge, the neighbouring teeth are gently prepared for bonding. For a traditional bridge, they are shaped and impressions are taken."),
+           ("Building the bridge", "A fibre bridge is built and bonded in the chair. A traditional bridge is made in the lab while you wear a temporary one."),
+           ("Final fit", "The bridge is fitted, shaped and polished, and your bite is checked.")],
+    aftercare=["A fibre bridge is strong, but not as strong as your natural teeth. Be mindful when biting into hard foods.",
+               "Brush twice a day, clean carefully under and around the bridge, and keep up with six-monthly check-ups and cleaning."],
+    faqs=[("Is a fibre bridge done in one day?", "Usually, yes. A fibre bridge is typically completed in a single visit, with an immediate result."),
+          ("Fibre bridge or traditional bridge?", "A fibre bridge is quicker and more conservative. A traditional bridge is stronger for heavy chewing but needs more tooth preparation and a lab. Dr Grace will recommend what suits your mouth."),
+          ("Can a bridge that was done badly be fixed?", "Often, yes. A poorly fitting bridge can be redone to correct its fit, shape and balance so it feels comfortable and looks natural."),
+          ("Is a bridge better than an implant?", "Neither is better for everyone. A bridge avoids surgery and is quicker; an implant doesn’t rely on the neighbouring teeth. If an implant would suit you better, Dr Grace will explain why and refer you.")],
+    related=["composite-bonding", "dentures", "extractions"],
 ),
 "dentures": dict(
     name="Dentures",
@@ -387,12 +422,28 @@ dict(
 # Instagram posts to embed on the Smile gallery page (paste the post link, e.g. https://www.instagram.com/p/XXXX/).
 # The first one also appears on the home page. A carousel post shows all its slides.
 INSTAGRAM_POSTS = [
-    {"url": "https://www.instagram.com/p/Dax7MRqigpk/", "title": "Smile transformations"},
+    {"url": "https://www.instagram.com/p/Dax7MRqigpk/", "title": "Before and after: gold and silver to a natural smile"},
+    {"url": "https://www.instagram.com/p/DZcs7L-ihmE/", "title": "Before and after"},
+    {"url": "https://www.instagram.com/reel/DbYM7R-KUDz/", "title": "Worn front teeth, restored in one day"},
+    {"url": "https://www.instagram.com/reel/DbvnfYsKBXw/", "title": "Fibre bridge or bonding? Can you tell?"},
+    {"url": "https://www.instagram.com/reel/DaDGlD9Kc7k/", "title": "Composite bonding, explained"},
+    {"url": "https://www.instagram.com/reel/DbdnAFYKqmZ/", "title": "Handcrafted, tooth by tooth"},
+    {"url": "https://www.instagram.com/reel/DdgVFKgq6R7/", "title": "Bonding, veneers or crowns?"},
+    {"url": "https://www.instagram.com/p/DdoD6nPqfJ9/", "title": "When baby teeth affect adult teeth"},
+    {"url": "https://www.instagram.com/p/DWDXPbQCpXw/", "title": "Composite veneers: the honest truth"},
 ]
 
 # TikTok videos (Share > Copy link). The first one also appears on the home page.
 TIKTOK_VIDEOS = [
-    {"url": "https://www.tiktok.com/@grace.dental.suit/video/7655656063072570645", "title": "Our most-watched video", "badge": "Most viewed"},
+    {"url": "https://www.tiktok.com/@grace.dental.suit/video/7655656063072570645", "title": "Goodbye gold, hello confidence", "badge": "Most viewed"},
+    {"url": "https://www.tiktok.com/@grace.dental.suit/video/7644602721005522196", "title": "Composite bonding in one visit"},
+    {"url": "https://www.tiktok.com/@grace.dental.suit/video/7448908141590334725", "title": "Smile reveal"},
+    {"url": "https://www.tiktok.com/@grace.dental.suit/video/7631959615382588693", "title": "From pain to confidence: root canal and bonding"},
+    {"url": "https://www.tiktok.com/@grace.dental.suit/video/7695014310463950100", "title": "From decayed teeth to a new smile"},
+    {"url": "https://www.tiktok.com/@grace.dental.suit/video/7621197540892986644", "title": "Fibre bridges, explained"},
+    {"url": "https://www.tiktok.com/@grace.dental.suit/video/7680610415277116693", "title": "Braces first, then a fibre bridge"},
+    {"url": "https://www.tiktok.com/@grace.dental.suit/video/7610453603345616149", "title": "Traditional bridge: the final reveal"},
+    {"url": "https://www.tiktok.com/@grace.dental.suit/video/7617839700300008725", "title": "Proudly Black woman-owned"},
 ]
 
 # Before-and-after pairs shown as drag-to-compare sliders. Only add photos the patient agreed to share.
