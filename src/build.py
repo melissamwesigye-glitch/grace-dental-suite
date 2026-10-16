@@ -13,6 +13,12 @@ WA_TEXT = quote("Hi Grace Dental Suite, I’d like to book an appointment.")
 WA = f"https://wa.me/{SITE['whatsapp']}?text={WA_TEXT}"
 e = html.escape
 PAGES = []  # for sitemap
+import hashlib
+def _ver(rel):
+    """Short content hash so browsers fetch a fresh copy whenever the file changes."""
+    p = os.path.join(os.path.dirname(__file__), "..", "site", rel)
+    return hashlib.md5(open(p, "rb").read()).hexdigest()[:8]
+CSS_V, JS_V = _ver("assets/css/style.css"), _ver("assets/js/main.js")
 
 ICON_WA = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2Zm5.8 14.16c-.24.69-1.42 1.32-1.96 1.36-.5.05-1.13.07-1.82-.11a16.6 16.6 0 0 1-1.65-.61c-2.9-1.25-4.79-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3s.75-2.13 1.02-2.42c.26-.29.57-.36.76-.36h.55c.18 0 .42-.07.65.5.24.58.82 2 .89 2.15.07.14.12.31.02.5-.1.19-.14.31-.29.48-.14.17-.3.38-.43.5-.14.14-.29.3-.13.59.17.29.74 1.22 1.58 1.97 1.09.97 2.01 1.27 2.3 1.42.29.14.46.12.62-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.65-.14.26.1 1.68.79 1.97.94.29.14.48.21.55.33.07.12.07.69-.17 1.37Z"/></svg>'
 ICON_PHONE = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg>'
@@ -93,7 +99,7 @@ def page(path, title, desc, body, current=None, schema=(), crumbs=None, og_type=
 <link rel="manifest" href="{r}site.webmanifest">
 <link rel="preload" href="{r}assets/fonts/antic-didone-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{r}assets/fonts/jost-300.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="{r}assets/css/style.css">
+<link rel="stylesheet" href="{r}assets/css/style.css?v={CSS_V}">
 {jsonld(sch)}
 </head>
 <body>
@@ -140,7 +146,7 @@ def page(path, title, desc, body, current=None, schema=(), crumbs=None, og_type=
 </footer>
 <a class="wa-float" href="{WA}" target="_blank" rel="noopener" aria-label="Book on WhatsApp">{ICON_WA}</a>
 <script>window.GDS={{whatsapp:"{SITE['whatsapp']}"}};</script>
-<script src="{r}assets/js/main.js" defer></script>
+<script src="{r}assets/js/main.js?v={JS_V}" defer></script>
 </body>
 </html>
 """
