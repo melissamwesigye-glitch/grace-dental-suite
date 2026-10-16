@@ -16,7 +16,8 @@ Dr Grace owns her domain and hosting; this repo produces plain files she uploads
 ```bash
 cd src && python3 build.py            # rebuild every page after editing content.py or build.py
 cd site && python3 -m http.server 8000 # preview at http://localhost:8000
-python3 tools/prepare_photos.py <slug> before.jpg after.jpg   # then add {"slug", "title", "note"} to BEFORE_AFTER
+python3 tools/prepare_photos.py <slug> before.jpg after.jpg   # then add {"slug", "title"} to BEFORE_AFTER
+bash tools/publish_preview.sh           # rebuild a no-index copy and push it to GitHub Pages (gh-pages)
 python3 tools/shoot.py index.html,gallery.html mobile          # screenshots (needs the preview server on port 8765)
 ```
 
@@ -32,7 +33,21 @@ python3 tools/shoot.py index.html,gallery.html mobile          # screenshots (ne
 - Keep it fast: no new third-party scripts. Instagram, TikTok and Maps load only when scrolled into view.
 - After changes, rebuild and check pages at 390px wide (no horizontal scroll) and in dark mode.
 
+## Design and copy rules (from the client, non-negotiable)
+
+- Must not look vibe-coded: no purple (or any) gradients, no pill-shaped buttons (corners 4 to 8px),
+  no emoji icons, no em dashes (also avoid middle-dot separators), no cursor animations,
+  no over-the-top scroll animations. The one load animation is the hero heart.
+- No fake reviews, fake metrics or customer counters. Only real numbers (e.g. 88 Google reviews).
+- No vague hero text: say who, what, where. No AI-sounding copy (journey, elevate, seamless, unlock...).
+- No AI-generated photos. Only real photos from Dr Grace.
+- Before-and-after photos: `python3 tools/split_pairs.py <originals folder>` crops combined images and
+  removes burned-in stickers; originals stay out of git (`originals/` is ignored).
+- Launch needs: custom domain connected, favicon, no "Made with AI" or generator tags,
+  privacy policy page and terms and conditions page (both exist: privacy.html, terms.html).
+
 ## Before launch (open items)
 
 Domain, opening hours, WhatsApp number (073 366 1421 per her socials; BP list shows 061 325 0776), braces offered?, treatment list, medical aids accepted,
-approval of the three blog articles, real review quotes, real practice photos.
+approval of the three blog articles, real review quotes, real practice photos,
+real portrait (current file was named ChatGPT_Image..., so it may be AI-edited), privacy policy and terms reviewed by Dr Grace.
