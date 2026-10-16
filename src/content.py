@@ -15,11 +15,10 @@ SITE = {
     "postcode": "7500", "region": "Western Cape", "country": "ZA",
     "maps_query": "11 Kitchener Street, Fairfield Estate, Parow, 7500",
     "maps_link": "https://www.google.com/maps/search/?api=1&query=Grace+Dental+Suite+11+Kitchener+Street+Parow",
-    # CONFIRM opening hours. (day label, display, schema days, opens, closes)
-    "hours": [
-        ("Monday to Friday", "08:00 – 17:00", ["Monday","Tuesday","Wednesday","Thursday","Friday"], "08:00", "17:00"),
-        ("Weekends and public holidays", "Closed", [], None, None),
-    ],
+    # CONFIRM opening hours. Leave empty until Dr Grace confirms; the site then asks people to call or WhatsApp.
+    # Format: (day label, display, schema days, opens, closes), e.g.
+    # ("Monday to Friday", "08:00 to 17:00", ["Monday","Tuesday","Wednesday","Thursday","Friday"], "08:00", "17:00"),
+    "hours": [],
     "instagram": "https://www.instagram.com/grace_dental_suite/",
     "facebook": "https://www.facebook.com/p/Grace-Dental-Suite-61552113605504/",
     "tiktok": "https://www.tiktok.com/@grace.dental.suit",
@@ -48,7 +47,7 @@ TREATMENTS = {
     name="Check-ups and cleaning",
     short="A thorough exam, scale and polish, and honest advice.",
     title="Dental Check-up and Cleaning in Parow | Grace Dental Suite",
-    desc="Unhurried dental check-ups and professional cleaning in Parow, Cape Town. Dr Grace explains what she finds and what it costs before any treatment.",
+    desc="Unhurried dental check-ups and professional cleaning in Parow, Cape Town. Dr Grace explains what she finds before any treatment.",
     h1="Dental check-ups and cleaning in Parow",
     intro=["A check-up is a short, unhurried visit where Dr Grace looks at your teeth, gums and mouth, and a professional clean removes the hard build-up your toothbrush can’t reach.",
            "Catching small problems early is the easiest way to avoid toothache, bigger treatment and bigger bills later. Most adults do well with a check-up every six months. If you have gum problems or a history of decay, we may suggest coming more often."],
@@ -61,7 +60,7 @@ TREATMENTS = {
     steps=[("We chat first", "About your health, any medicines you take and anything that’s been bothering you."),
            ("A careful exam", "Dr Grace checks every tooth, your gums, your bite and the soft tissues of your mouth, with X-rays if they’re needed."),
            ("Scale and polish", "Hard build-up is gently removed above and below the gum line, then your teeth are polished smooth."),
-           ("Your plan", "You leave knowing what’s healthy, what to watch and what, if anything, needs treatment, with costs explained first.")],
+           ("Your plan", "You leave knowing what’s healthy, what to watch and what, if anything, needs treatment.")],
     aftercare=["Your gums may feel a little tender for a day after a scale. Keep brushing twice a day with fluoride toothpaste and clean between your teeth once a day."],
     faqs=[("Does a scale and polish hurt?", "Most people feel some scraping and vibration but no pain. If your gums are sensitive, tell us and we can go slower or numb the area first."),
           ("Will my medical aid cover a check-up?", "Most medical aid plans cover routine check-ups and cleaning from day-to-day benefits, often twice a year. Benefits differ from plan to plan, so send us your medical aid details and we’ll help you check."),
@@ -108,7 +107,7 @@ TREATMENTS = {
            "Pain when you bite down",
            "Swelling, or a small pimple on the gum near a tooth",
            "A tooth that has darkened after a knock"],
-    steps=[("Diagnosis", "X-rays and simple tests show what’s happening. Dr Grace explains your options, including extraction, and the costs."),
+    steps=[("Diagnosis", "X-rays and simple tests show what’s happening. Dr Grace explains your options, including extraction."),
            ("Numbing", "The tooth is numbed and isolated with a thin rubber sheet to keep it clean and dry."),
            ("Cleaning and shaping", "The infected pulp is removed and the canals are cleaned and shaped with the Rooter."),
            ("Sealing", "The canals are filled and sealed and the tooth is closed. Back teeth usually need a crown afterwards to protect them.")],
@@ -134,7 +133,7 @@ TREATMENTS = {
            "A tooth is very loose because of gum disease",
            "A baby tooth is stuck and blocking the adult tooth",
            "Your orthodontist has asked for space to be made"],
-    steps=[("Assessment", "An exam and X-ray, then your options and costs explained."),
+    steps=[("Assessment", "An exam and X-ray, then your options explained."),
            ("Numbing", "The area is fully numbed. You’ll feel pressure, but you shouldn’t feel pain."),
            ("Removal", "The tooth is gently loosened and removed."),
            ("Recovery", "You bite on gauze to stop the bleeding and go home with clear aftercare instructions.")],
@@ -191,7 +190,7 @@ TREATMENTS = {
            "Stains or discolouration that cleaning won’t lift",
            "Old gold or silver restorations you’d like replaced with a natural look",
            "Adult teeth with enamel defects left by decayed baby teeth"],
-    steps=[("Consultation", "Tell us what you’d like to change. Dr Grace checks your bite and gum health and explains options and costs."),
+    steps=[("Consultation", "Tell us what you’d like to change. Dr Grace checks your bite and gum health and explains your options."),
            ("Shade matching", "The resin colour is matched to your natural teeth. Any whitening is done first, because bonding won’t whiten later."),
            ("Sculpting", "Decay or old restorations are removed where needed, then the resin is layered and shaped tooth by tooth."),
            ("Polish and check", "Each tooth is polished to a natural shine and your bite is checked and refined.")],
@@ -217,7 +216,7 @@ TREATMENTS = {
            "You want a natural-looking result quickly",
            "An old bridge feels uncomfortable or looks unnatural and needs redoing"],
     callout="Sometimes the right space has to be created first. If neighbouring teeth have drifted into a gap over the years, a short course of braces can move them back before the missing tooth is replaced.",
-    steps=[("Assessment", "Dr Grace checks the gap, the neighbouring teeth and your bite, and explains which bridge suits you and what it costs."),
+    steps=[("Assessment", "Dr Grace checks the gap, the neighbouring teeth and your bite, and explains which bridge suits you."),
            ("Preparation", "For a fibre bridge, the neighbouring teeth are gently prepared for bonding. For a traditional bridge, they are shaped and impressions are taken."),
            ("Building the bridge", "A fibre bridge is built and bonded in the chair. A traditional bridge is made in the lab while you wear a temporary one."),
            ("Final fit", "The bridge is fitted, shaped and polished, and your bite is checked.")],
@@ -239,7 +238,7 @@ TREATMENTS = {
            "Each denture is made by a dental laboratory to fit your mouth and adjusted until it feels comfortable."],
     signs_title="Dentures may suit you if",
     signs=["You’re missing several teeth", "You’ve lost all the teeth in your upper or lower jaw", "Your old denture is loose, worn or broken", "You want an affordable way to replace teeth"],
-    steps=[("Assessment", "We check your gums and remaining teeth and talk about partial or full options and costs."),
+    steps=[("Assessment", "We check your gums and remaining teeth and talk about partial or full options."),
            ("Impressions", "Moulds and bite records are taken so the lab can build your denture."),
            ("Try-in", "You see and feel the denture before it’s finished, so changes can still be made."),
            ("Fitting", "Your denture is fitted and adjusted, with follow-up visits for any sore spots.")],
@@ -296,9 +295,9 @@ TREATMENTS = {
 }
 
 NEW_PATIENT_FAQS = [
-    ("Do I need to be on BP Medical Aid?", "No. We’re on the BP Medical Aid Dental Network, and we also welcome patients on other medical aids and those paying cash."),
-    ("Can I get a quote before treatment?", "Yes. Dr Grace explains your treatment options and what they cost before anything is done, so there are no surprises."),
-    ("What if I’m nervous about the dentist?", "You’re not alone. Tell us when you book. We’ll explain each step before we start, go at your pace, and you can ask to pause at any time."),
+    ("Do I need to be on BP Medical Aid?", "No. We’re on the BP Medical Aid Dental Network. If you’re on another medical aid or paying cash, contact us before your visit and we’ll explain how payment works."),
+    ("Can I get a quote before treatment?", "Yes. Ask for a quote at your consultation, before any treatment is done."),
+    ("What if I’m nervous about the dentist?", "You’re not alone. Tell us when you book. Dr Grace explains each step before she starts, and you can ask to pause at any time."),
     ("How do I book?", "Send us a WhatsApp, call the practice, or use the booking form on our contact page."),
 ]
 
@@ -325,7 +324,7 @@ dict(
 </ul>
 <h2>What happens, step by step</h2>
 <h3>1. Finding the cause</h3>
-<p>An X-ray and a few simple tests show which tooth is the problem and how far the infection has gone. Before anything starts, Dr Grace explains your options, including taking the tooth out, and what each costs.</p>
+<p>An X-ray and a few simple tests show which tooth is the problem and how far the infection has gone. Before anything starts, Dr Grace explains your options, including taking the tooth out.</p>
 <h3>2. Numbing</h3>
 <p>The tooth is numbed with local anaesthetic. A thin rubber sheet is placed around it to keep it clean and dry. You’ll feel pressure but not pain.</p>
 <h3>3. Cleaning the canals</h3>
@@ -437,7 +436,7 @@ INSTAGRAM_POSTS = [
 TIKTOK_VIDEOS = [
     {"url": "https://www.tiktok.com/@grace.dental.suit/video/7655656063072570645", "title": "Goodbye gold, hello confidence", "badge": "Most viewed"},
     {"url": "https://www.tiktok.com/@grace.dental.suit/video/7644602721005522196", "title": "Composite bonding in one visit"},
-    {"url": "https://www.tiktok.com/@grace.dental.suit/video/7448908141590334725", "title": "Smile reveal"},
+    {"url": "https://www.tiktok.com/@grace.dental.suit/video/7448908141590334725", "title": "Thank you God for my talent"},
     {"url": "https://www.tiktok.com/@grace.dental.suit/video/7631959615382588693", "title": "From pain to confidence: root canal and bonding"},
     {"url": "https://www.tiktok.com/@grace.dental.suit/video/7695014310463950100", "title": "From decayed teeth to a new smile"},
     {"url": "https://www.tiktok.com/@grace.dental.suit/video/7621197540892986644", "title": "Fibre bridges, explained"},
@@ -451,4 +450,12 @@ TIKTOK_VIDEOS = [
 # then add an entry like:
 # {"slug": "bonding-1", "title": "Composite bonding", "note": "Small gap closed in one visit"},
 BEFORE_AFTER = [
+    {"slug": "badly-decayed-front-teeth", "title": "Badly decayed front teeth"},
+    {"slug": "broken-decayed-front-teeth", "title": "Broken and decayed front teeth"},
+    {"slug": "stained-worn-teeth", "title": "Heavily stained teeth"},
+    {"slug": "missing-front-tooth", "title": "Missing front tooth"},
+    {"slug": "chipped-discoloured-front-tooth", "title": "Chipped, discoloured front tooth"},
+    {"slug": "decay-between-front-teeth", "title": "Decay between the front teeth"},
+    {"slug": "gaps-and-decay", "title": "Gaps and decay on the upper teeth"},
+    {"slug": "short-lower-front-tooth", "title": "Short lower front tooth"},
 ]

@@ -35,10 +35,10 @@ def practice_schema():
        "telephone":SITE["phone_tel"],
        "address":{"@type":"PostalAddress","streetAddress":SITE["street"]+", "+SITE["area"],"addressLocality":"Parow","addressRegion":SITE["region"],"postalCode":SITE["postcode"],"addressCountry":SITE["country"]},
        "areaServed":["Parow","Bellville","Goodwood","Tygerberg","Elsies River","Cape Town"],
-       "openingHoursSpecification":days,
        "sameAs":[SITE["instagram"],SITE["facebook"],SITE["tiktok"]],
        "employee":{"@id":D+"/about.html#dr-grace"},
        "paymentAccepted":"Cash, Card, Medical aid"}
+    if days: s["openingHoursSpecification"]=days
     if SITE["email"]: s["email"]=SITE["email"]
     return s
 
@@ -73,7 +73,7 @@ def page(path, title, desc, body, current=None, schema=(), crumbs=None, og_type=
             else: parts.append(f'<li><a href="{r}{u}">{e(n)}</a></li>')
         crumb_html=f'<nav class="crumbs wrap" aria-label="Breadcrumb"><ol>{"".join(parts)}</ol></nav>'
     hours_rows="".join(f"<li>{e(l)}: {e(d)}</li>" for l,d,*_ in SITE["hours"])
-    credit = f' · <a href="{SITE["credit_url"]}" rel="noopener">{e(SITE["credit"])}</a>' if SITE["credit"] else ""
+    credit = f'<a href="{SITE["credit_url"]}" rel="noopener">{e(SITE["credit"])}</a>' if SITE["credit"] else ""
     email_li = f'<li><a href="mailto:{SITE["email"]}">{SITE["email"]}</a></li>' if SITE["email"] else ""
     doc = f"""<!doctype html>
 <html lang="en-ZA">
@@ -84,7 +84,7 @@ def page(path, title, desc, body, current=None, schema=(), crumbs=None, og_type=
 <meta name="description" content="{e(desc)}">
 <link rel="canonical" href="{url}">
 {'<meta name="robots" content="noindex">' if (noindex or PREVIEW) else ''}
-<meta name="theme-color" content="#3A1E2A">
+<meta name="theme-color" content="#2A2224">
 <meta property="og:type" content="{og_type}">
 <meta property="og:site_name" content="{SITE['name']}">
 <meta property="og:title" content="{e(title)}">
@@ -141,7 +141,7 @@ def page(path, title, desc, body, current=None, schema=(), crumbs=None, og_type=
         <ul><li><a href="{SITE['instagram']}" target="_blank" rel="noopener">Instagram</a></li><li><a href="{SITE['tiktok']}" target="_blank" rel="noopener">TikTok</a></li><li><a href="{SITE['facebook']}" target="_blank" rel="noopener">Facebook</a></li></ul>
       </div>
     </div>
-    <div class="legal"><span>© <span id="yr">{datetime.date.today().year}</span> Grace Dental Suite. All rights reserved.</span><span><a href="{r}privacy.html">Privacy notice (POPIA)</a>{credit}</span></div>
+    <div class="legal"><span>© <span id="yr">{datetime.date.today().year}</span> Grace Dental Suite. All rights reserved.</span><span class="legal-links"><a href="{r}privacy.html">Privacy policy</a><a href="{r}terms.html">Terms and conditions</a>{credit}</span></div>
   </div>
 </footer>
 <a class="wa-float" href="{WA}" target="_blank" rel="noopener" aria-label="Book on WhatsApp">{ICON_WA}</a>
@@ -194,37 +194,38 @@ def post_cards(r, posts):
     return '<div class="posts">' + "".join(out) + "</div>"
 
 def ig_block(post):
-    return f'''<div class="embed" data-instagram="{post['url']}"><a class="embed-fallback" href="{post['url']}" target="_blank" rel="noopener"><b>{e(post.get('title','View on Instagram'))}</b><span>See it on Instagram</span></a></div>'''
+    return f'''<div class="embed" data-instagram="{post['url']}"><a class="embed-fallback" href="{post['url']}" target="_blank" rel="noopener"><b>{e(post.get('title','View on Instagram'))}</b><span>View on Instagram</span></a></div>'''
 
-def tt_block(video, click=False):
-    """click=True: show a card that loads the TikTok player only when tapped (used on the gallery, where
-    loading many TikTok embeds at once makes TikTok refuse them)."""
+def tt_block(video):
+    """TikTok's own player: shows the video cover and plays in place. Loaded one at a time as it scrolls into
+    view (loading many TikTok embeds at once makes TikTok refuse them). The link is the fallback."""
+    vid = video["url"].rstrip("/").split("/")[-1]
     badge = f'<span class="badge">{e(video["badge"])}</span>' if video.get("badge") else ""
-    attr = "data-tiktok-click" if click else "data-tiktok"
-    hint = "Tap to play" if click else "@grace.dental.suit on TikTok"
-    return f'''<div class="embed" {attr}="{video['url']}"><a class="embed-fallback tall" href="{video['url']}" target="_blank" rel="noopener">{badge}<span class="play" aria-hidden="true"></span><b>{e(video.get('title','Watch on TikTok'))}</b><span>{hint}</span></a></div>'''
+    return f'''<figure class="tt"><div class="embed tt-frame" data-tiktok-player="{vid}"><a class="embed-fallback tall" href="{video['url']}" target="_blank" rel="noopener">{badge}<span class="play" aria-hidden="true"></span><b>{e(video.get('title','Watch on TikTok'))}</b><span>Watch on TikTok</span></a></div><figcaption>{e(video.get('title',''))}</figcaption></figure>'''
 
-def ba_slider(r, item):
+def ba_pair(r, item):
     base = f"{r}assets/img/gallery/{item['slug']}"
     t = e(item["title"])
-    return f'''<figure class="ba"><div class="ba-frame">
-<img class="ba-img ba-before" src="{base}-before.webp" alt="Before: {t}" width="1000" height="1000" loading="lazy">
-<img class="ba-img ba-after" src="{base}-after.webp" alt="After: {t}" width="1000" height="1000" loading="lazy">
-<span class="ba-tag l">Before</span><span class="ba-tag r">After</span><span class="ba-bar" aria-hidden="true"></span>
-<input class="ba-range" type="range" min="0" max="100" value="50" aria-label="Drag to compare before and after: {t}">
-</div><figcaption><strong>{t}</strong>{(". " + e(item["note"])) if item.get("note") else ""}</figcaption></figure>'''
+    return f'''<figure class="ba"><div class="ba-pair">
+<div class="ba-side"><img src="{base}-before.webp" alt="Before treatment: {t.lower()}" width="1200" height="800" loading="lazy"><span class="ba-tag">Before</span></div>
+<div class="ba-side"><img src="{base}-after.webp" alt="After treatment at Grace Dental Suite" width="1200" height="800" loading="lazy"><span class="ba-tag">After</span></div>
+</div><figcaption>{t}</figcaption></figure>'''
 
-def hours_table():
+def hours_html():
+    if not SITE["hours"]:
+        return "<p class=\"mb-0\">Call or WhatsApp us for appointment times.</p>"
     return '<table class="hours"><tbody>' + "".join(f"<tr><td>{e(l)}</td><td>{e(d)}</td></tr>" for l,d,*_ in SITE["hours"]) + "</tbody></table>"
 
 def visit_block(r, heading="Visit the practice"):
+    email = f'<div><dt>Email</dt><dd><a href="mailto:{SITE["email"]}">{SITE["email"]}</a></dd></div>' if SITE["email"] else ""
     return f'''<section class="section" id="visit"><div class="wrap split even">
 <div><h2>{heading}</h2>
 <dl class="info">
 <div><dt>Address</dt><dd>{SITE['street']}, {SITE['area']}<br>{SITE['city']}, {SITE['postcode']}<br><a href="{SITE['maps_link']}" target="_blank" rel="noopener">Get directions</a></dd></div>
 <div><dt>Phone</dt><dd><a href="tel:{SITE['phone_tel']}">{SITE['phone']}</a><br><a href="tel:{SITE['phone2_tel']}">{SITE['phone2']}</a></dd></div>
 <div><dt>WhatsApp</dt><dd><a href="{WA}" target="_blank" rel="noopener">Message us to book</a></dd></div>
-<div><dt>Hours</dt><dd>{hours_table()}</dd></div>
+{email}
+<div><dt>Hours</dt><dd>{hours_html()}</dd></div>
 </dl></div>
 <div class="map" data-map="{e(SITE['maps_query'])}"><a class="btn btn-ghost" href="{SITE['maps_link']}" target="_blank" rel="noopener">Open in Google Maps</a></div>
 </div></section>'''
@@ -232,98 +233,80 @@ def visit_block(r, heading="Visit the practice"):
 # ------------------------------------------------------------------ HOME
 def build_home():
     r=""
-    reviews_html = ""
+    quotes = ""
     if REVIEWS:
-        reviews_html = '<div class="quotes" style="margin-top:48px">' + "".join(f'<figure><blockquote>{e(q["quote"])}</blockquote><figcaption>{e(q["name"])}, Google review</figcaption></figure>' for q in REVIEWS[:3]) + "</div>"
-    groups_flat = [s for _,sl in TREATMENT_GROUPS for s in sl]
+        quotes = '<div class="quotes">' + "".join(f'<figure><blockquote>{e(q["quote"])}</blockquote><figcaption>{e(q["name"])}, Google review</figcaption></figure>' for q in REVIEWS[:3]) + "</div>"
     body = f'''
 <section class="hero"><div class="wrap hero-grid">
   <div>
-    <h1>Gentle dentistry in Parow, explained every step of the way.</h1>
-    <p class="lede">Dr Grace Mwizerwa and her team make dental visits calm, clear and comfortable. Many patients tell us it was the easiest appointment they’ve ever had.</p>
+    <h1>Gentle, clearly explained dentistry in Parow</h1>
+    <p class="lede">Dr Grace Mwizerwa (BChD, UWC) offers check-ups, fillings, root canal treatment, composite bonding and fibre bridges at 11 Kitchener Street, Fairfield Estate. Before each step, she tells you what she’s doing and why.</p>
     {cta_buttons(r)}
     <ul class="facts">
       <li><strong>{SITE['review_count']}</strong> reviews on Google</li>
-      <li><strong>{SITE['tiktok_followers']}</strong> followers on TikTok</li>
       <li><strong>BP Medical Aid</strong> Dental Network</li>
-      <li><strong>BChD</strong>, University of the Western Cape</li>
+      <li><strong>Open since</strong> 2023</li>
     </ul>
   </div>
   <div class="portrait">
     {heart()}
-    <div class="arch"><picture><source type="image/webp" srcset="assets/img/dr-grace-480.webp 480w, assets/img/dr-grace-800.webp 800w, assets/img/dr-grace-1100.webp 1100w" sizes="(max-width:860px) 84vw, 460px"><img src="assets/img/dr-grace-800.jpg" srcset="assets/img/dr-grace-480.jpg 480w, assets/img/dr-grace-800.jpg 800w, assets/img/dr-grace-1100.jpg 1100w" sizes="(max-width:860px) 84vw, 460px" width="800" height="800" alt="Dr Grace Mwizerwa smiling" fetchpriority="high"></picture></div>
+    <div class="arch"><picture><source type="image/webp" srcset="assets/img/dr-grace-480.webp 480w, assets/img/dr-grace-800.webp 800w, assets/img/dr-grace-1100.webp 1100w" sizes="(max-width:860px) 84vw, 460px"><img src="assets/img/dr-grace-800.jpg" srcset="assets/img/dr-grace-480.jpg 480w, assets/img/dr-grace-800.jpg 800w, assets/img/dr-grace-1100.jpg 1100w" sizes="(max-width:860px) 84vw, 460px" width="800" height="800" alt="Dr Grace Mwizerwa" fetchpriority="high"></picture></div>
     <div class="tag"><b>Dr Grace Mwizerwa</b><span>General dental practitioner</span></div>
   </div>
 </div></section>
 
-<section class="section tint"><div class="wrap split">
-  <div><h2>For anyone who dreads the dentist</h2><p class="lede" style="margin-top:18px">Nerves are normal. Our whole approach is built around making you feel in control.</p></div>
-  <ul class="promises">
-    <li><b>Explained first</b><p>Before anything happens, you’ll know what Dr Grace is doing and why.</p></li>
-    <li><b>Your pace</b><p>Need a break? Raise your hand and we stop. There’s no rush in this chair.</p></li>
-    <li><b>Costs upfront</b><p>You get your options and what they cost before treatment, with help checking your medical aid.</p></li>
-    <li><b>Never rushed</b><p>Bonding is sculpted by hand, tooth by tooth, and root canals use the cordless FKG Rooter for smoother, precise care.</p></li>
-  </ul>
+<section class="section tint"><div class="wrap">
+  <div class="section-head"><h2>Before and after</h2><a class="btn btn-ghost" href="gallery.html">See all results</a></div>
+  <div class="ba-grid">{"".join(ba_pair(r, i) for i in BEFORE_AFTER[:4])}</div>
+  <p class="small muted" style="margin-top:28px">Photos of Grace Dental Suite patients, shared with their permission. Every mouth is different, so results vary.</p>
 </div></section>
 
 <section class="section"><div class="wrap">
   <div class="section-head"><h2>Treatments</h2><a class="btn btn-ghost" href="treatments.html">All treatments</a></div>
-  {t_index(["composite-bonding","root-canal-treatment","bridges","check-ups-and-cleaning","teeth-whitening","emergency-dentist"], r)}
+  {t_index(["composite-bonding","root-canal-treatment","bridges","check-ups-and-cleaning","fillings","emergency-dentist"], r)}
+</div></section>
+
+<section class="section tint"><div class="wrap split">
+  <div><h2>If you’re nervous about the dentist</h2><p class="lede" style="margin-top:18px">Tell us when you book. Here is what to expect in the chair.</p></div>
+  <ul class="promises">
+    <li><b>Explained first</b><p>Dr Grace tells you what she’s about to do, and why, before she starts.</p></li>
+    <li><b>Your pace</b><p>Ask for a break at any time.</p></li>
+    <li><b>Your options</b><p>You hear the options for your teeth before any treatment is done.</p></li>
+    <li><b>No rushing</b><p>Bonding is shaped by hand, typically 2 to 3 hours per tooth.</p></li>
+  </ul>
 </div></section>
 
 <section class="section panel"><div class="wrap split even" style="align-items:center">
   <div>
     <h2>Meet Dr Grace</h2>
-    <p class="lede" style="margin-top:18px">Dr Grace Mwizerwa trained at the University of the Western Cape and runs Grace Dental Suite in Parow, a proudly Black woman-owned practice. Her patients know her for one thing above all: she explains every step, so treatment never feels like a mystery.</p>
+    <p class="lede" style="margin-top:18px">Dr Grace Mwizerwa trained at the University of the Western Cape and opened Grace Dental Suite in 2023. It is a proudly Black woman-owned practice. She shares her work, and honest dental advice, on TikTok and Instagram.</p>
     <div class="btn-row" style="margin-top:28px"><a class="btn btn-primary" href="about.html">About Dr Grace</a></div>
   </div>
-  <ol class="steps" aria-label="Your first visit">
-    <li><b>Book</b><p>On WhatsApp, by phone or online.</p></li>
-    <li><b>Talk it through</b><p>An exam, then your options and costs explained.</p></li>
-    <li><b>Treatment</b><p>Each step explained before it happens.</p></li>
-    <li><b>Aftercare</b><p>Clear instructions and a follow-up if you need one.</p></li>
-  </ol>
+  <div class="tt-single">{tt_block(TIKTOK_VIDEOS[0])}</div>
 </div></section>
 
-<section class="section" id="gallery"><div class="wrap embed-grid">
-  <div>
-    <h2>Real smiles, real results</h2>
-    <p class="lede" style="margin-top:18px">Before-and-after results from our patients, shared with their permission. Results differ from person to person.</p>
-    <div style="margin-top:28px">{ig_block(INSTAGRAM_POSTS[0])}</div>
+<section class="section" id="reviews"><div class="wrap split">
+  <div><h2>What patients say</h2></div>
+  <div class="prose">
+    <p>Grace Dental Suite has {SITE['review_count']} reviews on Google. Patients often describe their appointments as smooth and painless, and mention that Dr Grace explains each step of their treatment.</p>
+    {quotes}
+    <div class="btn-row" style="margin-top:24px"><a class="btn btn-ghost" href="{SITE['google_reviews']}" target="_blank" rel="noopener">Read the reviews on Google</a></div>
   </div>
-  <div>
-    <h2>As seen on TikTok</h2>
-    <p class="lede" style="margin-top:18px">Behind the scenes, smile reveals and honest answers to the questions you’re too shy to ask.</p>
-    <div style="margin-top:28px">{tt_block(TIKTOK_VIDEOS[0])}</div>
-  </div>
-</div><div class="wrap center" style="margin-top:48px"><a class="btn btn-ghost" href="gallery.html">See the full smile gallery</a></div></section>
-
-<section class="section panel" id="reviews"><div class="wrap">
-  <div class="split even" style="align-items:center">
-    <div><div class="review-count">{SITE['review_count']}</div><p class="lede" style="margin-top:12px">reviews on Google from patients across Parow, Bellville, Goodwood and beyond.</p>
-      <div class="btn-row" style="margin-top:24px"><a class="btn btn-ghost" href="{SITE['google_reviews']}" target="_blank" rel="noopener">Read our Google reviews</a></div></div>
-    <div class="themes">
-      <div><h3>Painless</h3><p>The word patients use most. Careful technique and proper numbing come first.</p></div>
-      <div><h3>Smooth and easy</h3><p>Many say it was the easiest dental appointment they’ve ever had.</p></div>
-      <div><h3>Every step explained</h3><p>Dr Grace walks you through each part of the procedure, so you always know what’s next.</p></div>
-    </div>
-  </div>
-  {reviews_html}
 </div></section>
 
 <section class="section tight"><div class="wrap"><div class="band">
-  <div><h2>On the BP Medical Aid Dental Network</h2><p>BP Medical Aid members are welcome as network patients. On another medical aid or paying cash? You’re welcome too. Ask us for a quote before treatment.</p></div>
+  <div><h2>On the BP Medical Aid Dental Network</h2><p>BP Medical Aid members can be seen as network patients. On another medical aid or paying cash? Contact us and we’ll explain how payment works.</p></div>
   <a class="btn btn-primary" href="new-patients.html#medical-aid">Medical aid and payment</a>
 </div></div></section>
 
 <section class="section"><div class="wrap">
-  <div class="section-head"><h2>From the blog</h2><a class="btn btn-ghost" href="blog.html">All articles</a></div>
+  <div class="section-head"><h2>Dental advice</h2><a class="btn btn-ghost" href="blog.html">All articles</a></div>
   {post_cards(r, POSTS[:3])}
 </div></section>
 
 {visit_block(r)}
 '''
-    page("index.html", "Grace Dental Suite | Gentle Dentist in Parow, Cape Town", "Gentle, comfortable dentistry in Parow, Cape Town with Dr Grace Mwizerwa (BChD, UWC). Every step explained, costs upfront. BP Medical Aid network. Book on WhatsApp.", body, current=None, priority="1.0")
+    page("index.html", "Grace Dental Suite | Dentist in Parow, Cape Town", "Dr Grace Mwizerwa (BChD, UWC): check-ups, fillings, root canals, composite bonding and fibre bridges in Fairfield Estate, Parow. BP Medical Aid network. Book on WhatsApp.", body, current=None, priority="1.0")
 
 # ------------------------------------------------------------------ ABOUT
 def build_about():
@@ -331,11 +314,11 @@ def build_about():
     body = f'''
 <section class="page-hero"><div class="wrap split even" style="align-items:center">
   <div>
-    <h1>Meet Dr Grace Mwizerwa</h1>
-    <p class="lede">General dental practitioner and founder of Grace Dental Suite in Parow, Cape Town.</p>
+    <h1>Dr Grace Mwizerwa</h1>
+    <p class="lede">General dental practitioner and owner of Grace Dental Suite in Fairfield Estate, Parow.</p>
     {cta_buttons(r)}
   </div>
-  <div class="portrait">{heart()}<div class="arch"><picture><source type="image/webp" srcset="assets/img/dr-grace-480.webp 480w, assets/img/dr-grace-800.webp 800w" sizes="(max-width:860px) 84vw, 400px"><img src="assets/img/dr-grace-800.jpg" width="800" height="800" alt="Portrait of Dr Grace Mwizerwa" loading="lazy"></picture></div></div>
+  <div class="portrait">{heart()}<div class="arch"><picture><source type="image/webp" srcset="assets/img/dr-grace-480.webp 480w, assets/img/dr-grace-800.webp 800w" sizes="(max-width:860px) 84vw, 400px"><img src="assets/img/dr-grace-800.jpg" width="800" height="800" alt="Dr Grace Mwizerwa" loading="lazy"></picture></div></div>
 </div></section>
 
 <section class="section tint" id="dr-grace"><div class="wrap split">
@@ -343,33 +326,27 @@ def build_about():
   <ul class="creds">
     <li><b>Bachelor of Dental Surgery (BChD)</b><span>University of the Western Cape</span></li>
     <li><b>General dental practitioner</b><span>On the BP Medical Aid Dental Network</span></li>
-    <li><b>Modern endodontic care</b><span>Uses the premium cordless FKG Rooter system for precise, smooth root canal treatment</span></li>
+    <li><b>Root canal equipment</b><span>Uses the cordless FKG Rooter endodontic motor</span></li>
   </ul>
 </div></section>
 
 <section class="section"><div class="wrap split">
   <div><h2>How Dr Grace works</h2></div>
   <div class="prose">
-    <p>Dr Grace trained at the University of the Western Cape and opened Grace Dental Suite in Fairfield Estate, Parow, in 2023. It’s proudly a Black woman-owned practice, built with passion, faith, hard work and the trust of every patient who walks through the door, around one idea: going to the dentist shouldn’t be something you dread.</p>
-    <p>Before any treatment, she talks you through what will happen, what you’ll feel and what it will cost. Nothing starts until you’re comfortable, and you can ask to pause at any time.</p>
-    <p>Her patients often say it’s the first time a dental visit felt smooth and painless. That comes from careful technique, modern equipment and simply taking the time to listen.</p>
-    <p>She is best known for composite bonding: rebuilding chipped, worn, gapped or gold-restored teeth by hand in tooth-coloured resin. She takes her time, typically 2 to 3 hours per tooth, and always aims to save natural teeth wherever possible.</p>
-    <p>Away from the chair, you’ll find Dr Grace sharing honest, everyday dental advice on <a href="{SITE['tiktok']}" target="_blank" rel="noopener">TikTok</a> and <a href="{SITE['instagram']}" target="_blank" rel="noopener">Instagram</a>.</p>
+    <p>Dr Grace opened Grace Dental Suite in Fairfield Estate, Parow, in 2023. It is a proudly Black woman-owned practice, built, in her words, with passion, faith, hard work and the trust of the patients who walk through the door.</p>
+    <p>Before any treatment, she talks you through what will happen. Nothing starts until you’re ready, and you can ask to pause at any time. Patients often describe their visits as smooth and painless.</p>
+    <p>Much of her work is composite bonding: rebuilding chipped, worn, decayed or gapped teeth, and replacing old gold restorations, by hand in tooth-coloured resin. She typically spends 2 to 3 hours per tooth and aims to save natural teeth wherever possible.</p>
+    <p>She also shares her cases and everyday dental advice on <a href="{SITE['tiktok']}" target="_blank" rel="noopener">TikTok</a> and <a href="{SITE['instagram']}" target="_blank" rel="noopener">Instagram</a>.</p>
   </div>
 </div></section>
 
-<section class="section tint"><div class="wrap embed-grid" style="align-items:center">
-  <div><h2>In her own words</h2><p class="lede" style="margin-top:18px">What started as a dream continues to grow through faith, hard work and the trust of our patients. Watch Dr Grace’s story on TikTok.</p></div>
-  <div>{tt_block(next(v for v in TIKTOK_VIDEOS if "woman-owned" in v["title"]))}</div>
-</div></section>
-
-<section class="section panel"><div class="wrap split even" style="align-items:center">
-  <div><h2>Root canals, done differently</h2><p class="lede" style="margin-top:18px">The cordless FKG Rooter is an endodontic motor that gives precise, steady control inside the tooth. In practice that means smoother treatment and a more comfortable recovery.</p></div>
-  <div class="btn-row"><a class="btn btn-primary" href="treatments/root-canal-treatment.html">About root canal treatment</a></div>
+<section class="section tint"><div class="wrap split even" style="align-items:center">
+  <div><h2>Dr Grace’s story</h2><p class="lede" style="margin-top:18px">A short video from Dr Grace about starting and growing the practice.</p></div>
+  <div class="tt-single">{tt_block(next(v for v in TIKTOK_VIDEOS if "woman-owned" in v["title"]))}</div>
 </div></section>
 {visit_block(r, "Book with Dr Grace")}
 '''
-    page("about.html", "Dr Grace Mwizerwa, Dentist in Parow | Grace Dental Suite", "Meet Dr Grace Mwizerwa, BChD (University of the Western Cape), general dental practitioner on the BP Medical Aid Dental Network in Parow, Cape Town.", body, current="about.html", schema=[person_schema()], crumbs=[("Home","index.html"),("Dr Grace","about.html")], og_type="profile", priority="0.9")
+    page("about.html", "Dr Grace Mwizerwa, Dentist in Parow | Grace Dental Suite", "Dr Grace Mwizerwa, BChD (University of the Western Cape), general dental practitioner on the BP Medical Aid Dental Network in Fairfield Estate, Parow, Cape Town.", body, current="about.html", schema=[person_schema()], crumbs=[("Home","index.html"),("Dr Grace","about.html")], og_type="profile", priority="0.9")
 
 # ------------------------------------------------------------------ TREATMENTS
 def build_treatments():
@@ -441,7 +418,7 @@ def build_new_patients():
   <li><b>Book</b><p>Send a WhatsApp, call us, or use the form on our contact page. Tell us if you’re nervous or in pain.</p></li>
   <li><b>Arrive a few minutes early</b><p>We’ll take your details, medical history and medical aid information.</p></li>
   <li><b>Exam and chat</b><p>Dr Grace examines your teeth and gums, with X-rays if needed, and explains what she finds.</p></li>
-  <li><b>Your plan</b><p>You get your options and costs before treatment, and choose what happens next.</p></li>
+  <li><b>Your options</b><p>You hear your treatment options before anything is done, and choose what happens next.</p></li>
 </ol></div></section>
 <section class="section"><div class="wrap split">
   <div><h2>What to bring</h2></div>
@@ -456,14 +433,14 @@ def build_new_patients():
   <div><h2>Medical aid and payment</h2></div>
   <div class="prose">
     <p>We’re on the <strong>BP Medical Aid Dental Network</strong>, so BP Medical Aid members can be treated as network patients.</p>
-    <p>Patients on other medical aids and those paying cash are welcome too. Benefits differ from plan to plan, so send us your medical aid details before your visit and we’ll help you understand what’s covered.</p>
-    <p>Dr Grace always explains costs before treatment. If anything isn’t covered, you’ll know before we start.</p>
+    <p>On another medical aid or paying cash? Contact us before your visit and we’ll explain how payment works. Benefits differ from plan to plan, so have your medical aid details ready.</p>
+    <p>You can ask for a quote at your consultation, before any treatment is done.</p>
   </div>
 </div></section>
 <section class="section"><div class="wrap split">
-  <div><h2>Nervous about the dentist?</h2><p class="lede" style="margin-top:18px">You’re in good company. Many of our patients were, too.</p></div>
+  <div><h2>Nervous about the dentist?</h2></div>
   <div class="prose">
-    <p>Tell us when you book, and we’ll plan a little more time. Dr Grace will explain each step before she starts, check in with you as she goes, and stop whenever you raise your hand.</p>
+    <p>Tell us when you book. Dr Grace will explain each step before she starts, and you can ask her to pause at any time.</p>
     <p>If something worries you, whether it’s needles, the sound of the drill or a bad experience in the past, just say so. Knowing helps us make the visit easier for you.</p>
   </div>
 </div></section>
@@ -491,7 +468,7 @@ def build_blog():
         body=f'''
 <article>
 <section class="page-hero"><div class="wrap narrow">
-  <p class="post-meta">{e(p["category"])} · <time datetime="{p["date"]}">{d}</time></p>
+  <p class="post-meta">{e(p["category"])}, <time datetime="{p["date"]}">{d}</time></p>
   <h1>{e(p["title"])}</h1>
   <p class="lede">{e(p["desc"])}</p>
 </div></section>
@@ -520,9 +497,9 @@ def build_contact():
       <div><dt>Phone</dt><dd><a href="tel:{SITE['phone_tel']}">{SITE['phone']}</a><br><a href="tel:{SITE['phone2_tel']}">{SITE['phone2']}</a></dd></div>
       {f'<div><dt>Email</dt><dd><a href="mailto:{SITE["email"]}">{SITE["email"]}</a></dd></div>' if SITE['email'] else ''}
       <div><dt>Address</dt><dd>{SITE['street']}, {SITE['area']}<br>{SITE['city']}, {SITE['postcode']}<br><a href="{SITE['maps_link']}" target="_blank" rel="noopener">Get directions</a></dd></div>
-      <div><dt>Hours</dt><dd>{hours_table()}</dd></div>
+      <div><dt>Hours</dt><dd>{hours_html()}</dd></div>
     </dl>
-    <div class="callout" style="margin-top:32px;border-left:3px solid var(--rose);background:var(--bg-2);padding:18px 22px;border-radius:0 16px 16px 0"><p style="margin:0"><strong>In severe pain or swelling?</strong> Call us straight away. If swelling spreads towards your eye or neck, or you struggle to breathe or swallow, go to your nearest hospital emergency unit.</p></div>
+    <div class="callout" style="margin-top:32px;border-left:3px solid var(--rose);background:var(--bg-2);padding:18px 22px;border-radius:0 6px 6px 0"><p style="margin:0"><strong>In severe pain or swelling?</strong> Call us straight away. If swelling spreads towards your eye or neck, or you struggle to breathe or swallow, go to your nearest hospital emergency unit.</p></div>
   </div>
   <form class="form" id="book-form" novalidate>
     <h2>Request an appointment</h2>
@@ -536,7 +513,7 @@ def build_contact():
     </div>
     <div class="field"><label for="f-when">Preferred day or time (optional)</label><input id="f-when" name="when" placeholder="e.g. Tuesday morning"></div>
     <div class="field"><label for="f-msg">Anything we should know? (optional)</label><textarea id="f-msg" name="message" placeholder="Nervous, in pain, or have a question? Tell us here."></textarea></div>
-    <label class="check"><input type="checkbox" name="consent" required><span>I agree that Grace Dental Suite may contact me about my appointment. See our <a href="privacy.html">privacy notice</a>.</span></label>
+    <label class="check"><input type="checkbox" name="consent" required><span>I agree that Grace Dental Suite may contact me about my appointment. See our <a href="privacy.html">privacy policy</a>.</span></label>
     <p class="form-error" role="alert"></p>
     <button class="btn btn-primary" type="submit">{ICON_WA}Continue in WhatsApp</button>
     <p class="form-note">Nothing is stored on this website. Your request is sent only when you press send in WhatsApp.</p>
@@ -552,35 +529,60 @@ def build_gallery():
     r=""
     parts=[]
     if BEFORE_AFTER:
-        parts.append(f'''<section class="section" style="padding-top:0"><div class="wrap"><h2 style="margin-bottom:12px">Before and after</h2><p class="lede" style="margin-bottom:36px">Drag the handle on each photo to compare.</p><div class="ba-grid">{"".join(ba_slider(r,i) for i in BEFORE_AFTER)}</div></div></section>''')
+        parts.append(f'''<section class="section" style="padding-top:0"><div class="wrap"><h2 style="margin-bottom:36px">Before and after</h2><div class="ba-grid">{"".join(ba_pair(r,i) for i in BEFORE_AFTER)}</div></div></section>''')
     if INSTAGRAM_POSTS:
         parts.append(f'''<section class="section{' tint' if BEFORE_AFTER else ''}"{' style="padding-top:0"' if not BEFORE_AFTER else ''}><div class="wrap"><div class="section-head"><h2>From Instagram</h2><a class="btn btn-ghost" href="{SITE['instagram']}" target="_blank" rel="noopener">Follow @grace_dental_suite</a></div><div class="media-grid">{"".join(ig_block(p) for p in INSTAGRAM_POSTS)}</div></div></section>''')
     if TIKTOK_VIDEOS:
-        parts.append(f'''<section class="section"><div class="wrap"><div class="section-head"><h2>Videos</h2><a class="btn btn-ghost" href="{SITE['tiktok']}" target="_blank" rel="noopener">Follow on TikTok</a></div><div class="media-grid">{"".join(tt_block(v, click=True) for v in TIKTOK_VIDEOS)}</div></div></section>''')
+        parts.append(f'''<section class="section"><div class="wrap"><div class="section-head"><h2>Videos</h2><a class="btn btn-ghost" href="{SITE['tiktok']}" target="_blank" rel="noopener">Follow on TikTok</a></div><div class="media-grid">{"".join(tt_block(v) for v in TIKTOK_VIDEOS)}</div></div></section>''')
     body=f'''
 <section class="page-hero"><div class="wrap">
   <h1>Smile gallery</h1>
-  <p class="lede">Real results and behind-the-scenes moments from Grace Dental Suite. Every patient photo is shared with permission, and results differ from person to person.</p>
+  <p class="lede">Before-and-after photos of Grace Dental Suite patients, shared with their permission, plus Dr Grace’s posts and videos. Every mouth is different, so results vary.</p>
 </div></section>
 {"".join(parts)}
-<section class="section tight"><div class="wrap"><div class="band"><div><h2>Like what you see?</h2><p>Book a check-up and Dr Grace will talk you through what’s possible for your smile.</p></div>{cta_buttons(r, ghost=False)}</div></div></section>
+<section class="section tight"><div class="wrap"><div class="band"><div><h2>Book a consultation</h2><p>Dr Grace will look at your teeth and explain which options could work for you.</p></div>{cta_buttons(r, ghost=False)}</div></div></section>
 '''
     page("gallery.html", "Smile Gallery: Before and After | Grace Dental Suite, Parow", "Real before-and-after results and videos from Grace Dental Suite in Parow, Cape Town: whitening, bonding, fillings and more.", body, current="gallery.html", crumbs=[("Home","index.html"),("Smile gallery","gallery.html")], priority="0.8")
 
 # ------------------------------------------------------------------ PRIVACY / 404
+def _contact_line():
+    mail = f', or email <a href="mailto:{SITE["email"]}">{SITE["email"]}</a>' if SITE["email"] else ""
+    return f'Call <a href="tel:{SITE["phone_tel"]}">{SITE["phone"]}</a> or <a href="tel:{SITE["phone2_tel"]}">{SITE["phone2"]}</a>{mail}.'
+
 def build_privacy():
     body=f'''
-<section class="page-hero"><div class="wrap narrow"><h1>Privacy notice</h1><p class="lede">How Grace Dental Suite handles your personal information, in line with the Protection of Personal Information Act (POPIA).</p></div></section>
+<section class="page-hero"><div class="wrap narrow"><h1>Privacy policy</h1><p class="lede">How Grace Dental Suite handles your personal information, in line with the Protection of Personal Information Act (POPIA).</p></div></section>
 <section class="section" style="padding-top:0"><div class="wrap narrow"><div class="prose">
-<h2>Who we are</h2><p>Grace Dental Suite, {SITE['street']}, {SITE['area']}, {SITE['city']}, {SITE['postcode']}. Our Information Officer is Dr Grace Mwizerwa. Contact us on <a href="tel:{SITE['phone_tel']}">{SITE['phone']}</a>.</p>
-<h2>What this website collects</h2><p>This website does not store any personal information. The booking form prepares a WhatsApp message on your own device; nothing is sent until you press send in WhatsApp, and then it is handled under WhatsApp’s own privacy terms.</p>
+<h2>Who we are</h2><p>Grace Dental Suite, {SITE['street']}, {SITE['area']}, {SITE['city']}, {SITE['postcode']}. Our Information Officer is Dr Grace Mwizerwa. {_contact_line()}</p>
+<h2>What this website collects</h2><p>This website does not store personal information and does not use analytics or advertising cookies. The booking form prepares a WhatsApp message on your own device. Nothing is sent until you press send in WhatsApp, and the message is then handled under WhatsApp’s own privacy terms.</p>
 <h2>Embedded content</h2><p>Some pages show content from Instagram, TikTok and Google Maps. These load only when you scroll to them, and those services may set their own cookies under their own privacy policies.</p>
-<h2>Patient information</h2><p>Information you share with us as a patient (such as contact details, medical history and medical aid details) is used only to provide your dental care, communicate with you and process medical aid claims. It is stored securely and not shared except where needed for your care, your medical aid, or where the law requires.</p>
-<h2>Your rights</h2><p>You may ask to see, correct or delete the personal information we hold about you, or object to how it is used. To do so, contact us. You may also lodge a complaint with the Information Regulator of South Africa.</p>
+<h2>Patient information</h2><p>Information you share with us as a patient, such as contact details, medical history and medical aid details, is used to provide your dental care, communicate with you and process medical aid claims. It is kept confidential and shared only where needed for your care, with your medical aid, or where the law requires.</p>
+<h2>Photos</h2><p>Before-and-after photos on this website are of Grace Dental Suite patients and are shown with their permission. To ask for a photo to be removed, contact us.</p>
+<h2>Your rights</h2><p>You may ask to see, correct or delete the personal information we hold about you, or object to how it is used, by contacting us. You may also lodge a complaint with the Information Regulator of South Africa.</p>
 <p class="muted small">Last updated {datetime.date.today().strftime("%-d %B %Y")}.</p>
 </div></div></section>
 '''
-    page("privacy.html", "Privacy Notice (POPIA) | Grace Dental Suite", "How Grace Dental Suite in Parow handles personal information under POPIA.", body, crumbs=[("Home","index.html"),("Privacy notice","privacy.html")], priority="0.3")
+    page("privacy.html", "Privacy Policy (POPIA) | Grace Dental Suite", "How Grace Dental Suite in Parow handles personal information under POPIA.", body, crumbs=[("Home","index.html"),("Privacy policy","privacy.html")], priority="0.3")
+
+def build_terms():
+    body=f'''
+<section class="page-hero"><div class="wrap narrow"><h1>Terms and conditions</h1><p class="lede">These terms apply to your use of the Grace Dental Suite website.</p></div></section>
+<section class="section" style="padding-top:0"><div class="wrap narrow"><div class="prose">
+<h2>Using this website</h2><p>By using this website you agree to these terms. If you don’t agree, please don’t use the website.</p>
+<h2>Health information</h2><p>The information on this website is general and is not a diagnosis or a substitute for an examination. Advice for your own teeth is given only at a consultation. If you have swelling spreading towards your eye or neck, or trouble breathing or swallowing, go to your nearest hospital emergency unit.</p>
+<h2>Appointments</h2><p>Sending a booking request through the website or WhatsApp does not confirm an appointment. Your appointment is confirmed only when the practice confirms it with you.</p>
+<h2>Fees and medical aid</h2><p>Fees and what your medical aid may cover are discussed with you at the practice. Medical aid benefits depend on your plan.</p>
+<h2>Before-and-after photos</h2><p>Photos show real results for individual patients. Every mouth is different, so they are not a promise of the same result for you.</p>
+<h2>Other websites</h2><p>This website links to and shows content from WhatsApp, Instagram, TikTok and Google Maps. Those services are run by other companies under their own terms, and we are not responsible for their content.</p>
+<h2>Copyright</h2><p>The text, logo and photos on this website belong to Grace Dental Suite. Please don’t copy or reuse them without our written permission.</p>
+<h2>Liability</h2><p>We take care to keep this website accurate and up to date, but we can’t guarantee it is free of errors. As far as the law allows, Grace Dental Suite is not liable for any loss arising from your use of this website.</p>
+<h2>Privacy</h2><p>How we handle personal information is explained in our <a href="privacy.html">privacy policy</a>.</p>
+<h2>Changes and governing law</h2><p>We may update these terms from time to time; the date below shows the latest version. These terms are governed by the laws of the Republic of South Africa.</p>
+<h2>Contact</h2><p>{_contact_line()}</p>
+<p class="muted small">Last updated {datetime.date.today().strftime("%-d %B %Y")}.</p>
+</div></div></section>
+'''
+    page("terms.html", "Terms and Conditions | Grace Dental Suite", "Terms for using the Grace Dental Suite website: health information, appointments, photos, copyright and liability.", body, crumbs=[("Home","index.html"),("Terms and conditions","terms.html")], priority="0.3")
 
 def build_404():
     body=f'''<section class="section"><div class="wrap narrow center"><h1>Page not found</h1><p class="lede" style="margin:20px auto 32px">The page you’re looking for has moved or doesn’t exist.</p><div class="btn-row" style="justify-content:center"><a class="btn btn-primary" href="index.html">Go to the home page</a><a class="btn btn-ghost" href="treatments.html">See treatments</a></div></div></section>'''
@@ -590,7 +592,7 @@ def build_meta():
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{u}</loc><lastmod>{TODAY}</lastmod><priority>{p}</priority></url>\n" for u,p in PAGES) + "</urlset>\n"
     open(os.path.join(OUT,"sitemap.xml"),"w").write(sm)
     open(os.path.join(OUT,"robots.txt"),"w").write("User-agent: *\nDisallow: /\n" if PREVIEW else f"User-agent: *\nAllow: /\n\nSitemap: {D}/sitemap.xml\n")
-    mf={"name":SITE["name"],"short_name":"Grace Dental","start_url":"/","display":"browser","background_color":"#FFFAFB","theme_color":"#3A1E2A",
+    mf={"name":SITE["name"],"short_name":"Grace Dental","start_url":"/","display":"browser","background_color":"#FFFAFB","theme_color":"#2A2224",
         "icons":[{"src":"/assets/img/icon-192.png","sizes":"192x192","type":"image/png"},{"src":"/assets/img/icon-512.png","sizes":"512x512","type":"image/png"}]}
     open(os.path.join(OUT,"site.webmanifest"),"w").write(json.dumps(mf,indent=2))
     # Apache hosts (cPanel): custom 404, HTTPS + www redirect, caching, compression
@@ -624,5 +626,5 @@ AddOutputFilterByType DEFLATE text/html text/css application/javascript image/sv
 """)
 
 if __name__ == "__main__":
-    build_home(); build_about(); build_treatments(); build_new_patients(); build_blog(); build_contact(); build_gallery(); build_privacy(); build_404(); build_meta()
+    build_home(); build_about(); build_treatments(); build_new_patients(); build_blog(); build_contact(); build_gallery(); build_privacy(); build_terms(); build_404(); build_meta()
     print(len(PAGES), "pages indexed")

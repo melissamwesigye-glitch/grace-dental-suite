@@ -55,30 +55,29 @@
     });
   });
 
-  document.querySelectorAll("[data-tiktok]").forEach(function (el) {
-    if (PREVIEW) return;
-    var url = el.dataset.tiktok;
-    var id = (url.match(/video\/(\d+)/) || [])[1];
-    if (!id) return;
-    whenNear(el, function () {
-      el.innerHTML = '<blockquote class="tiktok-embed" cite="' + url + '" data-video-id="' + id +
-        '" style="max-width:605px;min-width:0"><section>' + el.innerHTML + '</section></blockquote>';
-      addScript("https://www.tiktok.com/embed.js");
-    });
-  });
-
-  // Gallery TikToks: load the player only when tapped (one at a time keeps TikTok happy and pages light)
-  document.querySelectorAll("[data-tiktok-click]").forEach(function (el) {
-    if (PREVIEW) return;
-    var id = (el.dataset.tiktokClick.match(/video\/(\d+)/) || [])[1];
+  // TikTok: the official player shows the video cover and plays in place. Players are added one at a
+  // time as they scroll near the screen, because TikTok refuses many embeds loading at once.
+  var ttQueue = [], ttBusy = false;
+  function ttNext() {
+    if (ttBusy || !ttQueue.length) return;
+    ttBusy = true;
+    var el = ttQueue.shift();
     var card = el.querySelector("a");
-    if (!id || !card) return;
-    card.addEventListener("click", function (e) {
-      e.preventDefault();
-      var title = card.querySelector("b") ? card.querySelector("b").textContent : "TikTok video";
-      el.innerHTML = '<iframe class="tt-player" src="https://www.tiktok.com/player/v1/' + id +
-        '?autoplay=1&rel=0" title="' + title.replace(/"/g, "&quot;") + '" allow="autoplay; fullscreen; encrypted-media" allowfullscreen loading="lazy"></iframe>';
-    });
+    var title = card && card.querySelector("b") ? card.querySelector("b").textContent : "TikTok video";
+    var f = document.createElement("iframe");
+    f.className = "tt-player";
+    f.src = "https://www.tiktok.com/player/v1/" + el.dataset.tiktokPlayer + "?rel=0&description=0&music_info=0";
+    f.title = title + " (TikTok video)";
+    f.allow = "fullscreen; encrypted-media; picture-in-picture";
+    f.setAttribute("allowfullscreen", "");
+    f.addEventListener("load", function () { setTimeout(function () { ttBusy = false; ttNext(); }, 400); });
+    setTimeout(function () { if (ttBusy) { ttBusy = false; ttNext(); } }, 4000);
+    el.innerHTML = "";
+    el.appendChild(f);
+  }
+  document.querySelectorAll("[data-tiktok-player]").forEach(function (el) {
+    if (PREVIEW) return; // the link card stays
+    whenNear(el, function () { ttQueue.push(el); ttNext(); });
   });
 
   document.querySelectorAll("[data-map]").forEach(function (el) {
@@ -87,13 +86,6 @@
       el.innerHTML = '<iframe title="Map showing Grace Dental Suite in Parow" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=' +
         encodeURIComponent(el.dataset.map) + '&output=embed"></iframe>';
     });
-  });
-
-  // Before/after sliders
-  document.querySelectorAll(".ba-frame").forEach(function (frame) {
-    var range = frame.querySelector(".ba-range");
-    if (!range) return;
-    range.addEventListener("input", function () { frame.style.setProperty("--pos", range.value + "%"); });
   });
 
   // Booking form → opens WhatsApp with the request already written. No server needed.
