@@ -190,9 +190,13 @@ def post_cards(r, posts):
 def ig_block(post):
     return f'''<div class="embed" data-instagram="{post['url']}"><a class="embed-fallback" href="{post['url']}" target="_blank" rel="noopener"><b>{e(post.get('title','View on Instagram'))}</b><span>See it on Instagram</span></a></div>'''
 
-def tt_block(video):
+def tt_block(video, click=False):
+    """click=True: show a card that loads the TikTok player only when tapped (used on the gallery, where
+    loading many TikTok embeds at once makes TikTok refuse them)."""
     badge = f'<span class="badge">{e(video["badge"])}</span>' if video.get("badge") else ""
-    return f'''<div class="embed" data-tiktok="{video['url']}"><a class="embed-fallback tall" href="{video['url']}" target="_blank" rel="noopener">{badge}<span class="play" aria-hidden="true"></span><b>{e(video.get('title','Watch on TikTok'))}</b><span>@grace.dental.suit on TikTok</span></a></div>'''
+    attr = "data-tiktok-click" if click else "data-tiktok"
+    hint = "Tap to play" if click else "@grace.dental.suit on TikTok"
+    return f'''<div class="embed" {attr}="{video['url']}"><a class="embed-fallback tall" href="{video['url']}" target="_blank" rel="noopener">{badge}<span class="play" aria-hidden="true"></span><b>{e(video.get('title','Watch on TikTok'))}</b><span>{hint}</span></a></div>'''
 
 def ba_slider(r, item):
     base = f"{r}assets/img/gallery/{item['slug']}"
@@ -546,7 +550,7 @@ def build_gallery():
     if INSTAGRAM_POSTS:
         parts.append(f'''<section class="section{' tint' if BEFORE_AFTER else ''}"{' style="padding-top:0"' if not BEFORE_AFTER else ''}><div class="wrap"><div class="section-head"><h2>From Instagram</h2><a class="btn btn-ghost" href="{SITE['instagram']}" target="_blank" rel="noopener">Follow @grace_dental_suite</a></div><div class="media-grid">{"".join(ig_block(p) for p in INSTAGRAM_POSTS)}</div></div></section>''')
     if TIKTOK_VIDEOS:
-        parts.append(f'''<section class="section"><div class="wrap"><div class="section-head"><h2>Videos</h2><a class="btn btn-ghost" href="{SITE['tiktok']}" target="_blank" rel="noopener">Follow on TikTok</a></div><div class="media-grid">{"".join(tt_block(v) for v in TIKTOK_VIDEOS)}</div></div></section>''')
+        parts.append(f'''<section class="section"><div class="wrap"><div class="section-head"><h2>Videos</h2><a class="btn btn-ghost" href="{SITE['tiktok']}" target="_blank" rel="noopener">Follow on TikTok</a></div><div class="media-grid">{"".join(tt_block(v, click=True) for v in TIKTOK_VIDEOS)}</div></div></section>''')
     body=f'''
 <section class="page-hero"><div class="wrap">
   <h1>Smile gallery</h1>

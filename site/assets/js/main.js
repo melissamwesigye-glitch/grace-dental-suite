@@ -67,6 +67,20 @@
     });
   });
 
+  // Gallery TikToks: load the player only when tapped (one at a time keeps TikTok happy and pages light)
+  document.querySelectorAll("[data-tiktok-click]").forEach(function (el) {
+    if (PREVIEW) return;
+    var id = (el.dataset.tiktokClick.match(/video\/(\d+)/) || [])[1];
+    var card = el.querySelector("a");
+    if (!id || !card) return;
+    card.addEventListener("click", function (e) {
+      e.preventDefault();
+      var title = card.querySelector("b") ? card.querySelector("b").textContent : "TikTok video";
+      el.innerHTML = '<iframe class="tt-player" src="https://www.tiktok.com/player/v1/' + id +
+        '?autoplay=1&rel=0" title="' + title.replace(/"/g, "&quot;") + '" allow="autoplay; fullscreen; encrypted-media" allowfullscreen loading="lazy"></iframe>';
+    });
+  });
+
   document.querySelectorAll("[data-map]").forEach(function (el) {
     if (PREVIEW) return;
     whenNear(el, function () {

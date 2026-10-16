@@ -201,6 +201,7 @@ p{margin:0 0 1.1em}
 .embed-fallback .play{position:absolute;top:50%;left:50%;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.92);transform:translate(-50%,-50%);display:grid;place-items:center}
 .embed-fallback .play::after{content:"";border-left:20px solid #93465A;border-top:12px solid transparent;border-bottom:12px solid transparent;margin-left:6px}
 .embed-fallback .badge{position:absolute;top:20px;left:20px;background:#fff;color:#93465A;border-radius:999px;padding:5px 14px;font-size:.85rem;font-weight:500}
+.tt-player{width:100%;aspect-ratio:9/16;border:0;border-radius:24px;background:#000}
 .embed-note{font-size:.88rem;color:var(--muted);margin-top:12px;text-align:center}
 
 /* Gallery */
