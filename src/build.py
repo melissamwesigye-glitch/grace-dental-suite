@@ -4,7 +4,9 @@ import json, os, html, datetime
 from urllib.parse import quote
 from content import SITE, REVIEWS, TREATMENTS, TREATMENT_GROUPS, NEW_PATIENT_FAQS, POSTS, INSTAGRAM_POSTS, TIKTOK_VIDEOS, BEFORE_AFTER
 
-OUT = os.path.join(os.path.dirname(__file__), "..", "site")
+OUT = os.environ.get("BUILD_OUT") or os.path.join(os.path.dirname(__file__), "..", "site")
+# PREVIEW=1 builds a copy for a temporary preview address (e.g. GitHub Pages) that search engines must not index.
+PREVIEW = os.environ.get("PREVIEW") == "1"
 D = SITE["domain"].rstrip("/")
 TODAY = datetime.date.today().isoformat()
 WA_TEXT = quote("Hi Grace Dental Suite, I’d like to book an appointment.")
@@ -75,7 +77,7 @@ def page(path, title, desc, body, current=None, schema=(), crumbs=None, og_type=
 <title>{e(title)}</title>
 <meta name="description" content="{e(desc)}">
 <link rel="canonical" href="{url}">
-{'<meta name="robots" content="noindex">' if noindex else ''}
+{'<meta name="robots" content="noindex">' if (noindex or PREVIEW) else ''}
 <meta name="theme-color" content="#3A1E2A">
 <meta property="og:type" content="{og_type}">
 <meta property="og:site_name" content="{SITE['name']}">
@@ -570,7 +572,7 @@ def build_404():
 def build_meta():
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{u}</loc><lastmod>{TODAY}</lastmod><priority>{p}</priority></url>\n" for u,p in PAGES) + "</urlset>\n"
     open(os.path.join(OUT,"sitemap.xml"),"w").write(sm)
-    open(os.path.join(OUT,"robots.txt"),"w").write(f"User-agent: *\nAllow: /\n\nSitemap: {D}/sitemap.xml\n")
+    open(os.path.join(OUT,"robots.txt"),"w").write("User-agent: *\nDisallow: /\n" if PREVIEW else f"User-agent: *\nAllow: /\n\nSitemap: {D}/sitemap.xml\n")
     mf={"name":SITE["name"],"short_name":"Grace Dental","start_url":"/","display":"browser","background_color":"#FFFAFB","theme_color":"#3A1E2A",
         "icons":[{"src":"/assets/img/icon-192.png","sizes":"192x192","type":"image/png"},{"src":"/assets/img/icon-512.png","sizes":"512x512","type":"image/png"}]}
     open(os.path.join(OUT,"site.webmanifest"),"w").write(json.dumps(mf,indent=2))
