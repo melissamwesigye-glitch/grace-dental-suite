@@ -1,4 +1,4 @@
-# Grace Dental Suite — website
+# Grace Dental Suite: website
 
 The website for [Grace Dental Suite](https://www.instagram.com/grace_dental_suite/), a gentle general dental practice in Parow, Cape Town, run by Dr Grace Mwizerwa (BChD, University of the Western Cape).
 
