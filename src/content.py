@@ -442,7 +442,6 @@ TIKTOK_VIDEOS = [
     {"url": "https://www.tiktok.com/@grace.dental.suit/video/7621197540892986644", "title": "Fibre bridges, explained"},
     {"url": "https://www.tiktok.com/@grace.dental.suit/video/7680610415277116693", "title": "Braces first, then a fibre bridge"},
     {"url": "https://www.tiktok.com/@grace.dental.suit/video/7610453603345616149", "title": "Traditional bridge: the final reveal"},
-    {"url": "https://www.tiktok.com/@grace.dental.suit/video/7617839700300008725", "title": "Proudly Black woman-owned"},
 ]
 
 # Before-and-after pairs shown as drag-to-compare sliders. Only add photos the patient agreed to share.

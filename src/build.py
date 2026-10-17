@@ -340,10 +340,6 @@ def build_about():
   </div>
 </div></section>
 
-<section class="section tint"><div class="wrap split even" style="align-items:center">
-  <div><h2>Dr Grace’s story</h2><p class="lede" style="margin-top:18px">A short video from Dr Grace about starting and growing the practice.</p></div>
-  <div class="tt-single">{tt_block(next(v for v in TIKTOK_VIDEOS if "woman-owned" in v["title"]))}</div>
-</div></section>
 {visit_block(r, "Book with Dr Grace")}
 '''
     page("about.html", "Dr Grace Mwizerwa, Dentist in Parow | Grace Dental Suite", "Dr Grace Mwizerwa, BChD (University of the Western Cape), general dental practitioner on the BP Medical Aid Dental Network in Fairfield Estate, Parow, Cape Town.", body, current="about.html", schema=[person_schema()], crumbs=[("Home","index.html"),("Dr Grace","about.html")], og_type="profile", priority="0.9")
